@@ -52,15 +52,32 @@ A narrative-driven 2D heist game built in Pygame using an immutable, pure state 
   - `[C]` key / button to complete chapter.
   - `[H]` or `[ESC]` key / button to return to the Hub.
 
+### [COMPLETE] Phase 4: Playable Level — Chapter 1: The Plan (`level_plan.py`)
+- **Safehouse Heist Room Environment**:
+  - Playable sprite moves freely through the safehouse planning room.
+  - Interactive physical stations: Blueprint Map Table (Route), Schedule Terminal (Timing), Gear Workbench (Tool).
+  - Master Planning Board with 3 decision slots and interactive selection modals.
+- **Combination Puzzle (3 Choices Each)**:
+  - **Route**: Rooftop Ventilation Shaft, Underground Service Tunnel, Disguised Delivery Dock.
+  - **Timing**: 02:15 AM Patrol Shift Rotation, 03:30 AM System Diagnostic Reboot, 04:45 AM Pre-dawn Delivery Window.
+  - **Tool**: Thermal Lance, EMP Disruptor, Biometric Keycloner.
+- **Hidden Interactive Detail**:
+  - Tucked-away discarded burner radio behind the server rack with a pulsing signal LED.
+  - Investigating (`[E]` / click) reveals Sana's encrypted frequency note (`142.85 MHz`) and sets `knows_sana_contact` flag via `set_flag(state, FLAG_KNOWS_SANA_CONTACT)`.
+- **Puzzle Completion & Hub Return**:
+  - Once all 3 options are selected, player executes the plan (`[SPACE]` / `[ENTER]` / Click).
+  - Calls `complete_chapter(state, "The Plan")` and sets `current_chapter = None`, returning to the Hub regardless of whether the secret flag was found.
+
 ---
 
 ## 3. Test Suite Status
-All unit tests passing (21 / 21):
+All unit tests passing (29 / 29):
 - `test_game_state.py` (10 tests): Immutability, frozen dataclass safety, pure function returns, independent branches.
 - `test_hub.py` (11 tests): Chapter list ordering, Finale lock/unlock conditions, keyboard navigation, number keys, mouse selection, chapter transitions.
+- `test_plan_level.py` (8 tests): Puzzle short-lists, partial/full selection checks, hidden detail `knows_sana_contact` flag acquisition, completion flow with and without secret.
 
 ---
 
 ## 4. Next Planned Steps
-- **Phase 4**: Implement unique mini-mechanics and narrative clue interactions for each individual chapter.
-- **Phase 5**: Branching dialogue trees and consequence resolution in the Finale.
+- **Phase 5**: Build Chapter 2: "The Watcher" playable rooftop surveillance and guard tracking mechanic.
+- **Phase 6**: Build remaining chapter gameplay and the unlocked Finale confrontation.
