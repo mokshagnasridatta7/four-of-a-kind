@@ -68,16 +68,32 @@ A narrative-driven 2D heist game built in Pygame using an immutable, pure state 
   - Once all 3 options are selected, player executes the plan (`[SPACE]` / `[ENTER]` / Click).
   - Calls `complete_chapter(state, "The Plan")` and sets `current_chapter = None`, returning to the Hub regardless of whether the secret flag was found.
 
+### [COMPLETE] Phase 5: Playable Level — Chapter 2: The Watcher (`level_watcher.py`)
+- **Rooftop Surveillance Environment**:
+  - Overlook overlooking the ground facility: main gate, courtyard vault entrance, and back service alley.
+  - Rooftop observation deck with 3 designated observation zones along the parapet edge and a safe cover area.
+- **3-Day Guard Patrol & Stealth Observation**:
+  - Ground guard patrols with an oscillating searchlight beam.
+  - Player observes at the edge to fill the day's patrol progress bar.
+  - If illuminated at the edge, detection rises. Stepping back into cover drops detection to 0%.
+  - Being spotted triggers a red alert and resets the current day attempt without ending the chapter or kicking to the hub.
+- **Scripted Kabir Meeting Event**:
+  - During Day 2 (between 30% and 75% progress), Kabir slips into the Back Service Alley to meet an unfamiliar contact.
+  - Observing Zone 3 (Back Alley) witnesses the clandestine meeting, triggers a dialogue sequence, and sets `knows_kabir_meeting` flag via `set_flag(state, FLAG_KNOWS_KABIR_MEETING)`.
+- **Chapter Completion**:
+  - Successfully mapping all 3 days calls `complete_chapter(state, "The Watcher")` and sets `current_chapter = None`, returning to the Hub regardless of whether the secret flag was found.
+
 ---
 
 ## 3. Test Suite Status
-All unit tests passing (29 / 29):
+All unit tests passing (37 / 37):
 - `test_game_state.py` (10 tests): Immutability, frozen dataclass safety, pure function returns, independent branches.
 - `test_hub.py` (11 tests): Chapter list ordering, Finale lock/unlock conditions, keyboard navigation, number keys, mouse selection, chapter transitions.
 - `test_plan_level.py` (8 tests): Puzzle short-lists, partial/full selection checks, hidden detail `knows_sana_contact` flag acquisition, completion flow with and without secret.
+- `test_watcher_level.py` (8 tests): Stealth detection, cover vs observing states, observation zones, day retry reset, Kabir meeting flag acquisition, completion flow with and without secret.
 
 ---
 
 ## 4. Next Planned Steps
-- **Phase 5**: Build Chapter 2: "The Watcher" playable rooftop surveillance and guard tracking mechanic.
-- **Phase 6**: Build remaining chapter gameplay and the unlocked Finale confrontation.
+- **Phase 6**: Build Chapter 3: "The Signal" (intercepting radio frequencies and hacking telecom relays).
+- **Phase 7**: Build remaining chapter gameplay and the unlocked Finale confrontation.
