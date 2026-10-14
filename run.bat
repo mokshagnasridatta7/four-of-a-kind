@@ -1,6 +1,6 @@
 @echo off
 cd /d "%~dp0"
-echo Starting Pygame...
+echo Starting Four of a Kind...
 python main.py
 if %ERRORLEVEL% NEQ 0 (
     echo.
