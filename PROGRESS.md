@@ -83,17 +83,30 @@ A narrative-driven 2D heist game built in Pygame using an immutable, pure state 
 - **Chapter Completion**:
   - Successfully mapping all 3 days calls `complete_chapter(state, "The Watcher")` and sets `current_chapter = None`, returning to the Hub regardless of whether the secret flag was found.
 
+### [COMPLETE] Phase 6: Playable Level — Chapter 3: The Signal (`level_signal.py`)
+- **Underground Telecom Relay Environment**:
+  - Timed alarm disabling circuit room with animated electric cable conduits and junction terminals.
+  - Large digital countdown alarm clock (flashing yellow/red as time expires).
+- **Branching Puzzle Paths Based on `knows_sana_contact`**:
+  - **Visible Shortcut (Sana's Backdoor Bypass)**: Unlocked only if `knows_sana_contact` is set in GameState. Allows a direct 2-step bypass (Relay 1 -> Backdoor Terminal at 142.85 MHz), cutting travel and complexity in half.
+  - **Full Harder Path**: Required if `knows_sana_contact` is absent (shortcut terminal remains locked). Requires sequencing through all 4 relay breakers across the room (Node 1 -> 2 -> 3 -> 4).
+- **Timer Failure Behavior**:
+  - If the timer hits 0.0s, the alarm trips and sends the player back to the Chapter Hub (not an instant retry). Player must re-select "The Signal" from the Hub to try again.
+- **Chapter Completion**:
+  - Disabling the alarm via either path displays the success sequence, calls `complete_chapter(state, "The Signal")`, sets `current_chapter = None`, and returns to the Hub.
+
 ---
 
 ## 3. Test Suite Status
-All unit tests passing (37 / 37):
+All unit tests passing (43 / 43):
 - `test_game_state.py` (10 tests): Immutability, frozen dataclass safety, pure function returns, independent branches.
 - `test_hub.py` (11 tests): Chapter list ordering, Finale lock/unlock conditions, keyboard navigation, number keys, mouse selection, chapter transitions.
 - `test_plan_level.py` (8 tests): Puzzle short-lists, partial/full selection checks, hidden detail `knows_sana_contact` flag acquisition, completion flow with and without secret.
 - `test_watcher_level.py` (8 tests): Stealth detection, cover vs observing states, observation zones, day retry reset, Kabir meeting flag acquisition, completion flow with and without secret.
+- `test_signal_level.py` (6 tests): Timed puzzle countdown, shortcut unlock check based on `knows_sana_contact`, 2-step shortcut completion, full 4-node hard path completion, timer failure returning to hub without completing.
 
 ---
 
 ## 4. Next Planned Steps
-- **Phase 6**: Build Chapter 3: "The Signal" (intercepting radio frequencies and hacking telecom relays).
-- **Phase 7**: Build remaining chapter gameplay and the unlocked Finale confrontation.
+- **Phase 7**: Build Chapter 4: "The Job" (vault infiltration, lock cracking, and laser grid navigation).
+- **Phase 8**: Build remaining chapters and the unlocked Finale confrontation.

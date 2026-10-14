@@ -1,8 +1,8 @@
 """Main entry point for Four of a Kind.
 
 Manages the top-level application loop, display surface, immutable GameState,
-screen transitions between the Chapter Hub, dedicated playable levels (e.g. The Plan, The Watcher),
-generic chapter environments, and an on-screen debug overlay showing current flags.
+screen transitions between the Chapter Hub, dedicated playable levels (e.g. The Plan,
+The Watcher, The Signal), generic chapter environments, and an on-screen debug overlay.
 """
 
 import sys
@@ -11,6 +11,7 @@ import pygame
 from chapter_screen import ChapterScreen
 from game_state import (
     CHAPTER_THE_PLAN,
+    CHAPTER_THE_SIGNAL,
     CHAPTER_THE_WATCHER,
     GameState,
     complete_chapter,
@@ -18,6 +19,7 @@ from game_state import (
 )
 from hub import HubScreen
 from level_plan import ThePlanLevel
+from level_signal import TheSignalLevel
 from level_watcher import TheWatcherLevel
 from settings import (
     COLOR_CARD_BORDER,
@@ -54,6 +56,7 @@ class Game:
         self.chapter_screen = ChapterScreen()
         self.plan_level = ThePlanLevel()
         self.watcher_level = TheWatcherLevel()
+        self.signal_level = TheSignalLevel()
 
         # On-screen debug flags overlay (enabled by default; toggle with F3 or ~)
         self.show_debug: bool = True
@@ -86,6 +89,8 @@ class Game:
                         self.plan_level.reset()
                     elif selected_chapter == CHAPTER_THE_WATCHER:
                         self.watcher_level.reset()
+                    elif selected_chapter == CHAPTER_THE_SIGNAL:
+                        self.signal_level.reset(self.state)
                     else:
                         self.chapter_screen.reset_player_position()
 
@@ -99,6 +104,13 @@ class Game:
             elif self.state.current_chapter == CHAPTER_THE_WATCHER:
                 # Playable level for Chapter 2: The Watcher
                 action, new_state = self.watcher_level.handle_event(event, self.state)
+                self.state = new_state
+                if action == "return_to_hub":
+                    self.state = set_current_chapter(self.state, None)
+
+            elif self.state.current_chapter == CHAPTER_THE_SIGNAL:
+                # Playable level for Chapter 3: The Signal
+                action, new_state = self.signal_level.handle_event(event, self.state)
                 self.state = new_state
                 if action == "return_to_hub":
                     self.state = set_current_chapter(self.state, None)
@@ -119,6 +131,12 @@ class Game:
             new_state = self.watcher_level.update(dt, self.state)
             if new_state is not None:
                 self.state = new_state
+        elif self.state.current_chapter == CHAPTER_THE_SIGNAL:
+            action, new_state = self.signal_level.update(dt, self.state)
+            if new_state is not None:
+                self.state = new_state
+            if action == "return_to_hub":
+                self.state = set_current_chapter(self.state, None)
         elif self.state.current_chapter is not None:
             self.chapter_screen.update(dt)
 
@@ -164,6 +182,8 @@ class Game:
             self.plan_level.draw(self.screen, self.state)
         elif self.state.current_chapter == CHAPTER_THE_WATCHER:
             self.watcher_level.draw(self.screen, self.state)
+        elif self.state.current_chapter == CHAPTER_THE_SIGNAL:
+            self.signal_level.draw(self.screen, self.state)
         else:
             self.chapter_screen.draw(self.screen, self.state)
 
